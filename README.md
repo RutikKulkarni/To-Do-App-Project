@@ -39,6 +39,9 @@ The project consists of the following components:
 
 ![image](https://github.com/RutikKulkarni/To-Do-App-Project/assets/86470947/94541c2b-841a-41b7-add8-84f2670ecb2d)
 
+## Visit the Website
+
+You can access the To-Do App Project by visiting the [GitHub Pages website](https://rutikkulkarni.github.io/To-Do-App-Project/).
 
 ## Author
 
