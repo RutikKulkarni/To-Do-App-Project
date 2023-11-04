@@ -35,6 +35,11 @@ The project consists of the following components:
 - Bootstrap CSS and JavaScript.
 - Codesandbox for hosting JavaScript files.
 
+## screenshot
+
+![image](https://github.com/RutikKulkarni/To-Do-App-Project/assets/86470947/94541c2b-841a-41b7-add8-84f2670ecb2d)
+
+
 ## Author
 
 This project was created by Rutik Kulkarni. 
