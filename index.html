@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      type="text/javascript"
+      src="https://codesandbox.io/public/sse-hooks/sse-hooks.f742b80f43c5a2e0e619b0d97b5886cd.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://codesandbox.io/static/js/banner.0b5d84a2b.js"
+    ></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <title>To Do App</title>
+    <style>
+      body {
+        background: linear-gradient(
+          to right,
+          rgb(75, 121, 161),
+          rgb(40, 62, 81)
+        );
+      }
+    </style>
+  </head>
+  <body class="p-4">
+    <header class="container-fluid my-5 text-white">
+      <h1 class="text-center">Todo</h1>
+      <h4 id="date" class="text-center"></h4>
+    </header>
+
+    <main class="container">
+      <form id="todo-form" class="input-group my-3 border">
+        <input
+          id="new-todo"
+          type="text"
+          class="form-control"
+          placeholder="New To do..."
+        />
+        <button
+          id="add-todo"
+          class="btn btn-outline-secondary text-white"
+          type="submit"
+        >
+          <strong>&plus;</strong>
+        </button>
+      </form>
+
+      <section class="text-end mb-4">
+        <button id="clr-todo" type="button" class="btn btn-light">
+          Clear All
+        </button>
+      </section>
+
+      <ul id="todo-list" class="list-group border"></ul>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      document.getElementById(
+        "date"
+      ).textContent = new Date().toLocaleDateString("en-us", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+      let todoItems = [];
+      //
+      updateTodoItems = (items) => {
+        todoItems = items;
+        localStorage.setItem("todoItems", JSON.stringify(todoItems));
+      };
+      //
+      const todoForm = document.getElementById("todo-form");
+      const clrBtn = document.getElementById("clr-todo");
+      const todoList = document.getElementById("todo-list");
+      // Form Handled
+      todoForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        //
+        let id = `todo-${todoList.children.length + 1}`;
+        let text = todoForm.elements["new-todo"].value;
+        if (text) {
+          let todoItem = {
+            id,
+            text,
+            complete: false
+          };
+          updateTodoItems([...todoItems, todoItem]);
+          addToDo(todoItem);
+          localStorage.setItem("todoItems", JSON.stringify(todoItems));
+        }
+        todoForm.elements["new-todo"].value = "";
+        todoForm.elements["new-todo"].focus();
+      });
+      // Adding an item to the list.
+      const addToDo = ({ id, text, complete }) => {
+        let listItem = document.createElement("li");
+        listItem.classList.add("list-group-item", "p-3");
+        let input = document.createElement("input");
+        input.classList.add("form-check-input", "me-1");
+        input.id = id;
+        input.type = "checkbox";
+        //
+        let label = document.createElement("label");
+        label.classList.add("form-check-label");
+        label.innerHTML = text;
+        label.htmlFor = id;
+        //
+        if (complete) {
+          input.checked = true;
+          label.innerHTML = `<strike>${text}</strike>`;
+        }
+        //
+        listItem.append(input);
+        listItem.append(label);
+        todoList.append(listItem);
+      };
+      // Event Delegation
+      todoList.addEventListener("change", (event) => {
+        id = event.target.id;
+        updateTodoItems(
+          todoItems.map((item) => {
+            if (item.id === id) {
+              item.complete = event.target.checked;
+            }
+            return item;
+          })
+        );
+        //
+        const label = document.querySelector(`label[for=${id}]`);
+        console.log(id, label);
+        if (event.target.checked) {
+          label.innerHTML = `<strike>${label.textContent}</strike>`;
+        } else {
+          label.innerHTML = label.textContent;
+        }
+      });
+      // clearing all todos from DOM and memory
+      clrBtn.addEventListener("click", () => {
+        updateTodoItems([]);
+        todoList.innerHTML = "";
+      });
+      // loading todos from localstorage
+      document.addEventListener("DOMContentLoaded", () => {
+        todoItems = JSON.parse(localStorage.getItem("todoItems") || "[]");
+        todoItems.forEach(addToDo);
+        console.log(todoItems);
+      });
+    </script>
+    <script
+      crossorigin
+      type="text/javascript"
+      src="https://codesandbox.io/static/js/watermark-button.f4f9aed52.js"
+    ></script>
+  </body>
+</html>
